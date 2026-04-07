@@ -1,0 +1,26 @@
+{
+  "best_model": "Linear Regression",
+  "metrics": {
+    "Linear Regression": {
+      "mae": 4.1703,
+      "rmse": 5.5446,
+      "r2_score": 0.8772
+    },
+    "Decision Tree": {
+      "mae": 6.7643,
+      "rmse": 8.724,
+      "r2_score": 0.696
+    },
+    "Random Forest": {
+      "mae": 5.1462,
+      "rmse": 6.706,
+      "r2_score": 0.8204
+    }
+  },
+  "feature_columns": [
+    "study_hours",
+    "attendance",
+    "previous_marks",
+    "participation"
+  ]
+}

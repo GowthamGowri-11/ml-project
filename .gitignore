@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.env
+.venv
+
+# Streamlit
+.streamlit/
+
+# Models (large binary files - optional: remove if you want to include them)
+# models/*.joblib
+
+# Temporary test files
+test_output.txt
+test_results.json
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# OS
+desktop.ini
