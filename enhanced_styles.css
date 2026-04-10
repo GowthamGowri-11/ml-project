@@ -1,0 +1,46 @@
+/* This file contains the enhanced CSS styles that will be injected into the Streamlit app */
+/* It's a reference file - the actual styles are injected via Python in app.py */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENHANCED UI STYLES FOR STUDENT PERFORMANCE PREDICTOR
+   Version: 2.0 Premium
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Features:
+   - Glassmorphism effects
+   - Smooth animations
+   - Gradient backgrounds
+   - Modern card designs
+   - Enhanced typography
+   - Interactive hover states
+   - Custom scrollbars
+   - Responsive layouts
+*/
+
+/* Color Schemes:
+   
+   DARK MODE:
+   - Background: Deep space (#0a0e27)
+   - Cards: Frosted glass with blur
+   - Accents: Purple (#a78bfa) & Blue (#60a5fa)
+   - Text: Light (#f8fafc)
+   
+   LIGHT MODE:
+   - Background: Soft gradient blues
+   - Cards: White with transparency
+   - Accents: Deep purple (#7c3aed) & Blue (#3b82f6)
+   - Text: Dark (#0f172a)
+*/
+
+/* Key Enhancements:
+   1. Hero banner with animated gradients
+   2. Glassmorphism cards with backdrop blur
+   3. Animated progress bars with shimmer effect
+   4. Premium KPI cards with hover effects
+   5. Modern prediction cards with rotating backgrounds
+   6. Enhanced sidebar with gradients
+   7. Styled tabs with smooth transitions
+   8. Custom input fields with focus states
+   9. Premium buttons with 3D effects
+   10. Custom scrollbars
+*/

@@ -3,56 +3,6 @@
     "study_hours": 5.0,
     "predicted_marks": 72.5,
     "category": "High",
-    "timestamp": "2026-04-07 22:03:32"
-  },
-  {
-    "study_hours": 5.0,
-    "attendance": 75.0,
-    "previous_marks": 65.0,
-    "participation": "Medium",
-    "predicted_marks": 67.27,
-    "category": "Medium \u26a0\ufe0f",
-    "confidence": 93.4,
-    "timestamp": "2026-04-07 22:11:50"
-  },
-  {
-    "study_hours": 5.0,
-    "attendance": 75.0,
-    "previous_marks": 65.0,
-    "participation": "Low",
-    "predicted_marks": 67.55,
-    "category": "Medium \u26a0\ufe0f",
-    "confidence": 93.4,
-    "timestamp": "2026-04-07 22:12:01"
-  },
-  {
-    "study_hours": 5.0,
-    "attendance": 75.0,
-    "previous_marks": 65.0,
-    "participation": "High",
-    "predicted_marks": 67.83,
-    "category": "Medium \u26a0\ufe0f",
-    "confidence": 93.4,
-    "timestamp": "2026-04-07 22:12:09"
-  },
-  {
-    "study_hours": 12.0,
-    "attendance": 93.0,
-    "previous_marks": 45.0,
-    "participation": "High",
-    "predicted_marks": 91.05,
-    "category": "Excellent \ud83c\udf1f",
-    "confidence": 93.4,
-    "timestamp": "2026-04-07 22:12:36"
-  },
-  {
-    "study_hours": 7.0,
-    "attendance": 93.0,
-    "previous_marks": 45.0,
-    "participation": "High",
-    "predicted_marks": 73.65,
-    "category": "High \u2705",
-    "confidence": 93.4,
-    "timestamp": "2026-04-07 22:13:04"
+    "timestamp": "2026-04-09 00:40:27"
   }
 ]

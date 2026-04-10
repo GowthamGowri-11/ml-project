@@ -1,0 +1,26 @@
+{
+  "total_records": 2411,
+  "last_updated": "2026-04-10 23:26:32",
+  "features": [
+    "StudentID",
+    "Age",
+    "Gender",
+    "Ethnicity",
+    "ParentalEducation",
+    "StudyTimeWeekly",
+    "Absences",
+    "Tutoring",
+    "ParentalSupport",
+    "Extracurricular",
+    "Sports",
+    "Music",
+    "Volunteering",
+    "GPA",
+    "GradeClass"
+  ],
+  "gpa_range": [
+    0.0,
+    4.0
+  ],
+  "avg_gpa": 1.9122014251853525
+}

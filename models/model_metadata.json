@@ -1,26 +1,36 @@
 {
   "best_model": "Linear Regression",
+  "target": "GPA",
+  "dataset": "Student_performance_data _.csv",
+  "feature_columns": [
+    "Age",
+    "Gender",
+    "Ethnicity",
+    "ParentalEducation",
+    "StudyTimeWeekly",
+    "Absences",
+    "Tutoring",
+    "ParentalSupport",
+    "Extracurricular",
+    "Sports",
+    "Music",
+    "Volunteering"
+  ],
   "metrics": {
     "Linear Regression": {
-      "mae": 4.1703,
-      "rmse": 5.5446,
-      "r2_score": 0.8772
+      "mae": 0.1553,
+      "rmse": 0.1966,
+      "r2_score": 0.9532
     },
     "Decision Tree": {
-      "mae": 6.7643,
-      "rmse": 8.724,
-      "r2_score": 0.696
+      "mae": 0.2562,
+      "rmse": 0.3268,
+      "r2_score": 0.8708
     },
     "Random Forest": {
-      "mae": 5.1462,
-      "rmse": 6.706,
-      "r2_score": 0.8204
+      "mae": 0.1909,
+      "rmse": 0.2459,
+      "r2_score": 0.9269
     }
-  },
-  "feature_columns": [
-    "study_hours",
-    "attendance",
-    "previous_marks",
-    "participation"
-  ]
+  }
 }
