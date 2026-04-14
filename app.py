@@ -989,6 +989,14 @@ def load_model_and_preprocessor():
     
     try:
         if os.path.exists(mp) and os.path.exists(pp):
+            # Import train_new_dataset to make MinimalPreprocessor available
+            try:
+                import train_new_dataset
+                # Make the class available in multiple namespaces for pickle
+                sys.modules['__main__'].MinimalPreprocessor = train_new_dataset.MinimalPreprocessor
+            except:
+                pass
+            
             model = joblib.load(mp)
             preprocessor = joblib.load(pp)
             return model, preprocessor
