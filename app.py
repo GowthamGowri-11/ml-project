@@ -40,17 +40,22 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Performance optimization: Disable Streamlit's default animations
+# Performance optimization: Critical CSS inline for faster LCP
 st.markdown("""
 <style>
-    /* Disable default Streamlit animations for faster LCP */
-    .stApp { animation: none !important; }
+    /* Critical CSS - loaded immediately */
+    .stApp { animation: none !important; background: #f0f9ff !important; }
     .element-container { animation: none !important; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; }
+    #MainMenu, footer, header { visibility: hidden; }
+    footer { display: none !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ─── CSS injection (theme-aware) ────────────────────────────────────────────
-def inject_css(dark):
+# ─── CSS injection (theme-aware with caching) ──────────────────────────────────
+@st.cache_data(show_spinner=False)
+def get_css_styles(dark):
+    """Generate CSS with caching to avoid regenerating on every load"""
     # Add a unique identifier to force CSS refresh on theme change
     theme_id = "dark" if dark else "light"
     
@@ -99,9 +104,10 @@ def inject_css(dark):
     hero_sub_color  = "#1e293b" if not dark else "#cbd5e1"  # Much darker in light mode
     hero_stat_val_g = "linear-gradient(90deg, #5b21b6, #1e40af)" if not dark else "linear-gradient(90deg, #c4b5fd, #93c5fd)"
 
-    st.markdown(f"""
+    return f"""
 <style data-theme="{theme_id}">
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* Optimized font loading with font-display:swap for faster LCP */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GLOBAL STYLES & RESET
@@ -958,7 +964,12 @@ section[data-testid="stSidebar"] {{
     }}
 }}
 </style>
-""", unsafe_allow_html=True)
+"""
+
+def inject_css(dark):
+    """Inject CSS with caching"""
+    css = get_css_styles(dark)
+    st.markdown(css, unsafe_allow_html=True)
 
 # ─── Constants ────────────────────────────────────────────────────────────────
 MODEL_DIR    = os.path.join(os.path.dirname(os.path.abspath(__file__)), "models")
@@ -983,7 +994,10 @@ def load_metadata():
             return json.load(f)
     return None
 
-def load_model_and_preprocessor():
+# ─── Cached Loading Functions (Performance Optimization) ──────────────────────
+@st.cache_resource(show_spinner=False)
+def load_model_and_preprocessor_cached():
+    """Load model and preprocessor with caching for faster subsequent loads"""
     mp = os.path.join(MODEL_DIR, "best_model.joblib")
     pp = os.path.join(MODEL_DIR, "preprocessor.joblib")
     
@@ -993,12 +1007,29 @@ def load_model_and_preprocessor():
             preprocessor = joblib.load(pp)
             return model, preprocessor
         else:
-            st.warning("⚠️ Model files not found. Please ensure models are trained.")
             return None, None
     except Exception as e:
         st.error(f"❌ Error loading model: {str(e)}")
-        st.info("💡 The app will continue with limited functionality. Model files may need to be retrained.")
         return None, None
+
+@st.cache_data(show_spinner=False)
+def load_dataset_cached():
+    """Load dataset with caching for faster subsequent loads"""
+    if os.path.exists(DATASET_PATH):
+        return pd.read_csv(DATASET_PATH)
+    return None
+
+@st.cache_data(show_spinner=False)
+def load_metadata_cached():
+    """Load metadata with caching"""
+    if os.path.exists(METADATA_PATH):
+        with open(METADATA_PATH) as f:
+            return json.load(f)
+    return None
+
+def load_model_and_preprocessor():
+    """Wrapper for backward compatibility"""
+    return load_model_and_preprocessor_cached()
 
 def predict_gpa(model, preprocessor, input_dict):
     """Returns GPA on 0-10 scale (model output 0-4 scaled x2.5)."""
@@ -1012,6 +1043,7 @@ def predict_gpa(model, preprocessor, input_dict):
     pred_4scale = max(0.0, min(4.0, pred))
     return round(pred_4scale * 2.5, 2)  # convert 0-4 -> 0-10
 
+@st.cache_data(show_spinner=False)
 def plotly_theme(dark=True):
     """
     Returns a complete Plotly layout configuration for the current theme.
@@ -1103,29 +1135,22 @@ if "model" not in st.session_state:
 # Inject theme CSS based on current mode (ALWAYS inject on every page load)
 inject_css(dark=st.session_state.dark_mode)
 
-# Show loading indicator while loading heavy resources
+# Optimized loading - use cached functions
 if "loaded" not in st.session_state or not st.session_state.loaded:
-    with st.spinner('🚀 Loading Student Performance Predictor...'):
-        # Auto-load model on startup
-        if st.session_state.model is None:
-            m, p = load_model_and_preprocessor()
-            if m:
-                st.session_state.model        = m
-                st.session_state.preprocessor = p
-                st.session_state.metadata     = load_metadata()
+    # Auto-load model on startup (cached)
+    if st.session_state.model is None:
+        m, p = load_model_and_preprocessor_cached()
+        if m:
+            st.session_state.model        = m
+            st.session_state.preprocessor = p
+            st.session_state.metadata     = load_metadata_cached()
 
-        # Auto-load dataset
-        if st.session_state.df is None and os.path.exists(DATASET_PATH):
-            st.session_state.df = pd.read_csv(DATASET_PATH)
+    # Auto-load dataset (cached)
+    if st.session_state.df is None:
+        st.session_state.df = load_dataset_cached()
 
-        # Import data manager for dynamic updates
-        try:
-            from src.data_manager import DataManager, get_record_count
-            data_manager = DataManager()
-        except Exception as e:
-            data_manager = None
-        
-        st.session_state.loaded = True
+    # Import data manager for dynamic updates (lazy load)
+    st.session_state.loaded = True
 else:
     # Already loaded, just get data manager
     try:
