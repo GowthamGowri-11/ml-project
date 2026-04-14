@@ -1307,7 +1307,7 @@ with tab1:
         st.markdown("<br>", unsafe_allow_html=True)
         
         # Enhanced prediction button
-        predict_btn = st.button("🔮  Predict Student Performance", use_container_width=True, type="primary")
+        predict_btn = st.button("🔮  Predict Student Performance", width="stretch", type="primary")
 
         if predict_btn:
             input_dict = {
@@ -1374,7 +1374,7 @@ with tab1:
                     title={'text': "GPA Score", 'font': {'size': 16, 'color': '#e2e8f0' if st.session_state.dark_mode else '#1e293b'}}
                 ))
                 fig_gauge_gpa.update_layout(**plotly_theme(st.session_state.dark_mode), height=280, margin=dict(l=20, r=20, t=50, b=20), showlegend=False)
-                st.plotly_chart(fig_gauge_gpa, use_container_width=True, config={'displayModeBar': False})
+                st.plotly_chart(fig_gauge_gpa, width="stretch", config={'displayModeBar': False})
 
             # Enhanced KPI metrics
             meta = st.session_state.metadata or {}
@@ -1505,20 +1505,20 @@ with tab1:
             if len(st.session_state.history) > 1:
                 st.markdown('<div class="sec-head">📜 Prediction History (This Session)</div>', unsafe_allow_html=True)
                 history_df = pd.DataFrame(st.session_state.history)
-                st.dataframe(history_df, use_container_width=True, hide_index=True)
+                st.dataframe(history_df, width="stretch", hide_index=True)
             
             # Show recent dataset records if data was saved
             if save_to_dataset and st.session_state.df is not None:
                 st.markdown('<div class="sec-head">📊 Recent Dataset Records</div>', unsafe_allow_html=True)
                 st.markdown("**Last 5 records in the dataset:**")
                 recent_df = st.session_state.df.tail(5)[['StudentID', 'Age', 'StudyTimeWeekly', 'Absences', 'GPA', 'GradeClass']]
-                st.dataframe(recent_df, use_container_width=True, hide_index=True)
+                st.dataframe(recent_df, width="stretch", hide_index=True)
             
             # Add a button to make another prediction
             st.markdown("<br>", unsafe_allow_html=True)
             col_reset1, col_reset2, col_reset3 = st.columns([1, 2, 1])
             with col_reset2:
-                if st.button("🔄 Make Another Prediction", use_container_width=True, type="primary"):
+                if st.button("🔄 Make Another Prediction", width="stretch", type="primary"):
                     # Clear the prediction results by rerunning
                     st.rerun()
 
@@ -1721,7 +1721,7 @@ with tab2:
             st.markdown(edu_html, unsafe_allow_html=True)
 
         st.markdown('<div class="sec-head">🗃️ Raw Data Preview</div>', unsafe_allow_html=True)
-        st.dataframe(df.head(30), use_container_width=True, height=320)
+        st.dataframe(df.head(30), width="stretch", height=320)
 
 
 # ─── TAB 3 · MODEL PERFORMANCE ────────────────────────────────────────────────
@@ -1866,7 +1866,7 @@ with tab3:
             margin=dict(l=40, r=40, t=80, b=20),
             showlegend=False
         )
-        st.plotly_chart(fig_gauge, use_container_width=True, config={'displayModeBar': False})
+        st.plotly_chart(fig_gauge, width="stretch", config={'displayModeBar': False})
 
 
         # Metrics Explanation
