@@ -14,6 +14,10 @@ import joblib
 warnings.filterwarnings("ignore")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+# Fix for pickle loading - make this module available as 'main'
+if '__main__' not in sys.modules:
+    sys.modules['__main__'] = sys.modules[__name__]
+
 # ─── Page config (must be first Streamlit call) ───────────────────────────────
 st.set_page_config(
     page_title="Student Performance Predictor",
