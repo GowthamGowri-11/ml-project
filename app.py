@@ -14,9 +14,23 @@ import joblib
 warnings.filterwarnings("ignore")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# Fix for pickle loading - make this module available as 'main'
-if '__main__' not in sys.modules:
-    sys.modules['__main__'] = sys.modules[__name__]
+# ─── MinimalPreprocessor class MUST be defined before loading pickles ─────────
+class MinimalPreprocessor:
+    """
+    Lightweight preprocessor wrapper that stores the scaler and feature names.
+    MUST be defined at module level for pickle compatibility.
+    """
+    def __init__(self, feature_cols, scaler):
+        self.feature_columns     = feature_cols
+        self.scaler              = scaler
+        self.label_encoders      = {}
+        self.categorical_columns = []
+        self.numerical_columns   = feature_cols
+        self.target_column       = "GPA"
+        self.is_fitted           = True
+
+# Make MinimalPreprocessor available in __main__ namespace for pickle
+sys.modules['__main__'].MinimalPreprocessor = MinimalPreprocessor
 
 # ─── Page config (must be first Streamlit call) ───────────────────────────────
 st.set_page_config(
@@ -955,20 +969,6 @@ FEATURE_COLS = ["Age","Gender","Ethnicity","ParentalEducation","StudyTimeWeekly"
                 "Absences","Tutoring","ParentalSupport","Extracurricular","Sports","Music","Volunteering"]
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
-class MinimalPreprocessor:
-    """
-    Lightweight preprocessor wrapper that stores the scaler and feature names
-    in a format compatible with the existing app.py.
-    """
-    def __init__(self, feature_cols, scaler):
-        self.feature_columns     = feature_cols
-        self.scaler              = scaler
-        self.label_encoders      = {}
-        self.categorical_columns = []
-        self.numerical_columns   = feature_cols
-        self.target_column       = "GPA"
-        self.is_fitted           = True
-
 def gpa_to_grade(gpa):
     """Grade thresholds on 0-10 scale."""
     if gpa >= 9.0: return "A",  "Excellent", "grade-A"
@@ -989,14 +989,6 @@ def load_model_and_preprocessor():
     
     try:
         if os.path.exists(mp) and os.path.exists(pp):
-            # Import train_new_dataset to make MinimalPreprocessor available
-            try:
-                import train_new_dataset
-                # Make the class available in multiple namespaces for pickle
-                sys.modules['__main__'].MinimalPreprocessor = train_new_dataset.MinimalPreprocessor
-            except:
-                pass
-            
             model = joblib.load(mp)
             preprocessor = joblib.load(pp)
             return model, preprocessor
