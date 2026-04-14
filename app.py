@@ -982,9 +982,19 @@ def load_metadata():
 def load_model_and_preprocessor():
     mp = os.path.join(MODEL_DIR, "best_model.joblib")
     pp = os.path.join(MODEL_DIR, "preprocessor.joblib")
-    if os.path.exists(mp) and os.path.exists(pp):
-        return joblib.load(mp), joblib.load(pp)
-    return None, None
+    
+    try:
+        if os.path.exists(mp) and os.path.exists(pp):
+            model = joblib.load(mp)
+            preprocessor = joblib.load(pp)
+            return model, preprocessor
+        else:
+            st.warning("⚠️ Model files not found. Please ensure models are trained.")
+            return None, None
+    except Exception as e:
+        st.error(f"❌ Error loading model: {str(e)}")
+        st.info("💡 The app will continue with limited functionality. Model files may need to be retrained.")
+        return None, None
 
 def predict_gpa(model, preprocessor, input_dict):
     """Returns GPA on 0-10 scale (model output 0-4 scaled x2.5)."""
