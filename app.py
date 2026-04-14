@@ -40,15 +40,25 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Performance optimization: Critical CSS inline for faster LCP
+# AGGRESSIVE Performance optimization: Inline critical CSS with minimal styles
 st.markdown("""
 <style>
-    /* Critical CSS - loaded immediately */
-    .stApp { animation: none !important; background: #f0f9ff !important; }
-    .element-container { animation: none !important; }
+    /* Critical CSS only - absolute minimum for fast LCP */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    .stApp { background: #f0f9ff !important; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; }
-    #MainMenu, footer, header { visibility: hidden; }
-    footer { display: none !important; }
+    #MainMenu, footer, header { display: none !important; }
+    .block-container { padding-top: 1rem !important; max-width: 1400px !important; }
+    /* Preload hero styles for instant render - NO ANIMATIONS */
+    .hero { background: #ddd6fe; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; }
+    .hero-title { font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
+    .hero-sub { font-size: 1.1rem; color: #1e293b; margin-bottom: 1rem; }
+    .hero-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .hero-stat { text-align: center; }
+    .hero-stat-val { font-size: 1.8rem; font-weight: 700; color: #5b21b6; }
+    .hero-stat-lbl { font-size: 0.85rem; color: #64748b; }
+    .hero-badge { display: inline-block; background: rgba(139,92,246,0.15); color: #5b21b6; 
+                  padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; margin-bottom: 0.8rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -106,8 +116,7 @@ def get_css_styles(dark):
 
     return f"""
 <style data-theme="{theme_id}">
-/* Optimized font loading with font-display:swap for faster LCP */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+/* NO EXTERNAL FONTS - Use system fonts only for instant rendering */
 
 /* ═══════════════════════════════════════════════════════════════════════════
    GLOBAL STYLES & RESET
@@ -119,7 +128,7 @@ def get_css_styles(dark):
 }}
 
 html, body, .stApp {{
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif !important;
     background: {BG} !important;
     color: {TXT} !important;
     font-size: 16px;
@@ -157,9 +166,9 @@ footer::after {{ display: none !important; }}
     content: ''; position: absolute; top: -60%; right: -10%;
     width: 420px; height: 420px;
     background: radial-gradient(circle, rgba(139,92,246,0.18) 0%, transparent 70%);
-    border-radius: 50%; animation: pulse 6s ease-in-out infinite;
+    border-radius: 50%; /* NO animation for faster LCP */
 }}
-@keyframes pulse {{ 0%,100%{{transform:scale(1);opacity:1;}} 50%{{transform:scale(1.12);opacity:0.7;}} }}
+/* Removed pulse animation for performance */
 .hero-badge {{
     display: inline-flex; align-items: center; gap: 6px;
     background: rgba(139,92,246,0.15); border: 1px solid rgba(139,92,246,0.35);
@@ -536,35 +545,30 @@ div[data-testid="stNumberInput"] button {{
     }}
 }}
 
-/* Hero Section Animation - OPTIMIZED FOR LCP */
-.hero {{
-    animation: fadeIn 0.3s ease-out;
-}}
+/* Hero Section Animation - DISABLED FOR INSTANT LCP */
+.hero {
+    /* NO animation for instant render */
+}
 
-.hero-badge {{
-    animation: fadeIn 0.4s ease-out 0.05s backwards;
-}}
+.hero-badge {
+    /* NO animation */
+}
 
-.hero-title {{
-    animation: fadeIn 0.3s ease-out 0.1s backwards;
-}}
+.hero-title {
+    /* NO animation */
+}
 
-.hero-sub {{
-    animation: fadeIn 0.3s ease-out 0.15s backwards;
-}}
+.hero-sub {
+    /* NO animation */
+}
 
-.hero-stats {{
-    animation: fadeIn 0.3s ease-out 0.2s backwards;
-}}
+.hero-stats {
+    /* NO animation */
+}
 
-.hero-stat {{
-    animation: fadeIn 0.3s ease-out backwards;
-}}
-
-.hero-stat:nth-child(1) {{ animation-delay: 0.2s; }}
-.hero-stat:nth-child(2) {{ animation-delay: 0.22s; }}
-.hero-stat:nth-child(3) {{ animation-delay: 0.24s; }}
-.hero-stat:nth-child(4) {{ animation-delay: 0.26s; }}
+.hero-stat {
+    /* NO animation */
+}
 
 /* KPI Cards Animation - FASTER */
 .kpi-wrap {{
@@ -1132,10 +1136,7 @@ if "model" not in st.session_state:
     st.session_state.history      = []
     st.session_state.loaded       = False
 
-# Inject theme CSS based on current mode (ALWAYS inject on every page load)
-inject_css(dark=st.session_state.dark_mode)
-
-# Optimized loading - use cached functions
+# Optimized loading - use cached functions (load data first, CSS later)
 if "loaded" not in st.session_state or not st.session_state.loaded:
     # Auto-load model on startup (cached)
     if st.session_state.model is None:
@@ -1170,7 +1171,7 @@ else:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  HERO BANNER
+#  HERO BANNER (Render FIRST for fast LCP)
 # ══════════════════════════════════════════════════════════════════════════════
 df = st.session_state.df
 n_records = len(df) if df is not None else 2393
@@ -1189,6 +1190,9 @@ st.markdown(f"""
   </div>
 </div>
 """, unsafe_allow_html=True)
+
+# NOW inject full CSS after hero is rendered (deferred for better LCP)
+inject_css(dark=st.session_state.dark_mode)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
