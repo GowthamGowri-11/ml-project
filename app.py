@@ -40,25 +40,79 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# AGGRESSIVE Performance optimization: Inline critical CSS with minimal styles
+# Optimized inline CSS - complete hero styles to prevent layout shift
 st.markdown("""
 <style>
-    /* Critical CSS only - absolute minimum for fast LCP */
+    /* Critical CSS - complete styles for hero to prevent CLS */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     .stApp { background: #f0f9ff !important; }
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important; 
+           font-size: 16px; line-height: 1.6; }
     #MainMenu, footer, header { display: none !important; }
-    .block-container { padding-top: 1rem !important; max-width: 1400px !important; }
-    /* Preload hero styles for instant render - NO ANIMATIONS */
-    .hero { background: #ddd6fe; border-radius: 16px; padding: 2rem; margin-bottom: 1.5rem; }
-    .hero-title { font-size: 2.5rem; font-weight: 700; color: #0f172a; margin-bottom: 0.5rem; }
-    .hero-sub { font-size: 1.1rem; color: #1e293b; margin-bottom: 1rem; }
-    .hero-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; }
-    .hero-stat { text-align: center; }
-    .hero-stat-val { font-size: 1.8rem; font-weight: 700; color: #5b21b6; }
-    .hero-stat-lbl { font-size: 0.85rem; color: #64748b; }
-    .hero-badge { display: inline-block; background: rgba(139,92,246,0.15); color: #5b21b6; 
-                  padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.75rem; margin-bottom: 0.8rem; }
+    .block-container { padding: 1rem 1rem 3rem !important; max-width: 1400px !important; }
+    
+    /* Complete hero styles inline for instant render */
+    .hero { 
+        background: linear-gradient(135deg, #ddd6fe 0%, #c7d2fe 25%, #bfdbfe 50%, #bae6fd 75%, #a5f3fc 100%);
+        border: 1px solid rgba(100,80,200,0.5);
+        border-radius: 20px; 
+        padding: 2.4rem 2.8rem; 
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-badge { 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 6px;
+        background: rgba(139,92,246,0.15); 
+        border: 1px solid rgba(139,92,246,0.35);
+        border-radius: 30px; 
+        padding: 4px 14px; 
+        font-size: 0.75rem; 
+        font-weight: 600;
+        color: #5b21b6;
+        margin-bottom: 1rem;
+    }
+    .hero-title { 
+        font-size: 2.8rem; 
+        font-weight: 800; 
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0a0a0a 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.8rem;
+        line-height: 1.2;
+    }
+    .hero-sub { 
+        font-size: 1.15rem; 
+        color: #1e293b; 
+        margin-bottom: 1.8rem;
+        font-weight: 500;
+    }
+    .hero-stats { 
+        display: flex; 
+        gap: 2.5rem; 
+        flex-wrap: wrap; 
+    }
+    .hero-stat { 
+        text-align: center; 
+    }
+    .hero-stat-val { 
+        font-size: 2rem; 
+        font-weight: 800; 
+        background: linear-gradient(90deg, #5b21b6, #1e40af);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1;
+        margin-bottom: 0.3rem;
+    }
+    .hero-stat-lbl { 
+        font-size: 0.85rem; 
+        color: #64748b; 
+        font-weight: 500;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -545,116 +599,77 @@ div[data-testid="stNumberInput"] button {{
     }}
 }}
 
-/* Hero Section Animation - DISABLED FOR INSTANT LCP */
+/* Hero Section - NO animations for instant render */
 .hero {
-    /* NO animation for instant render */
+    /* Styles already in critical CSS */
 }
 
-.hero-badge {
-    /* NO animation */
+.hero-badge, .hero-title, .hero-sub, .hero-stats, .hero-stat {
+    /* Styles already in critical CSS - no animations */
 }
 
-.hero-title {
-    /* NO animation */
+/* KPI Cards Animation - MINIMAL */
+.kpi-wrap {
+    /* No animation */
 }
 
-.hero-sub {
-    /* NO animation */
+.kpi {
+    /* No animation */
 }
 
-.hero-stats {
-    /* NO animation */
+/* ALL ANIMATIONS DISABLED FOR PERFORMANCE */
+/* Section Headers - NO animation */
+.sec-head {
+    /* No animation */
 }
 
-.hero-stat {
-    /* NO animation */
+/* Prediction Card - NO animation */
+.pred-card {
+    /* No animation */
 }
 
-/* KPI Cards Animation - FASTER */
-.kpi-wrap {{
-    animation: fadeIn 0.3s ease-out 0.15s backwards;
-}}
+/* Containers - NO animation */
+.stElementContainer div[data-testid="stVerticalBlockBorderWrapper"] {
+    /* No animation */
+}
 
-.kpi {{
-    animation: fadeIn 0.3s ease-out backwards;
-}}
+/* Tabs - NO animation */
+.stTabs {
+    /* No animation */
+}
 
-.kpi:nth-child(1) {{ animation-delay: 0.18s; }}
-.kpi:nth-child(2) {{ animation-delay: 0.2s; }}
-.kpi:nth-child(3) {{ animation-delay: 0.22s; }}
-.kpi:nth-child(4) {{ animation-delay: 0.24s; }}
+.stTabs [data-baseweb="tab"] {
+    /* No animation */
+}
 
-/* Section Headers Animation - SIMPLIFIED */
-.sec-head {{
-    animation: fadeIn 0.3s ease-out backwards;
-}}
+/* Charts - NO animation */
+.js-plotly-plot {
+    /* No animation */
+}
 
-/* Prediction Card Animation - SIMPLIFIED */
-.pred-card {{
-    animation: fadeIn 0.4s ease-out backwards;
-}}
+/* Dataframes - NO animation */
+.stDataFrame {
+    /* No animation */
+}
 
-/* Container Animations - SIMPLIFIED */
-.stElementContainer div[data-testid="stVerticalBlockBorderWrapper"] {{
-    animation: fadeIn 0.3s ease-out backwards;
-}}
+/* Buttons - NO animation */
+.stButton > button {
+    /* No animation */
+}
 
-/* Stagger effect - MINIMAL DELAYS */
-.element-container:nth-child(1) .stElementContainer div[data-testid="stVerticalBlockBorderWrapper"] {{ animation-delay: 0.02s; }}
-.element-container:nth-child(2) .stElementContainer div[data-testid="stVerticalBlockBorderWrapper"] {{ animation-delay: 0.04s; }}
-.element-container:nth-child(3) .stElementContainer div[data-testid="stVerticalBlockBorderWrapper"] {{ animation-delay: 0.06s; }}
-.element-container:nth-child(4) .stElementContainer div[data-testid="stVerticalBlockBorderWrapper"] {{ animation-delay: 0.08s; }}
-
-/* Tab Animation - SIMPLIFIED */
-.stTabs {{
-    animation: fadeIn 0.3s ease-out 0.1s backwards;
-}}
-
-.stTabs [data-baseweb="tab"] {{
-    animation: fadeIn 0.2s ease-out backwards;
-}}
-
-.stTabs [data-baseweb="tab"]:nth-child(1) {{ animation-delay: 0.12s; }}
-.stTabs [data-baseweb="tab"]:nth-child(2) {{ animation-delay: 0.14s; }}
-.stTabs [data-baseweb="tab"]:nth-child(3) {{ animation-delay: 0.16s; }}
-.stTabs [data-baseweb="tab"]:nth-child(4) {{ animation-delay: 0.18s; }}
-
-/* Chart Animations - MINIMAL */
-.js-plotly-plot {{
-    animation: fadeIn 0.3s ease-out 0.15s backwards;
-}}
-
-/* Dataframe Animation - MINIMAL */
-.stDataFrame {{
-    animation: fadeIn 0.3s ease-out 0.18s backwards;
-}}
-
-/* Button Animation - MINIMAL */
-.stButton > button {{
-    animation: fadeIn 0.2s ease-out 0.2s backwards;
-}}
-
-/* Input Fields Animation - MINIMAL */
+/* Input Fields - NO animation */
 div[data-testid="stNumberInput"],
 div[data-testid="stTextInput"],
 div[data-testid="stSelectbox"],
 .stSlider,
-.stCheckbox {{
-    animation: fadeIn 0.2s ease-out backwards;
-}}
+.stCheckbox {
+    /* No animation */
+}
 
-/* Minimal stagger for inputs */
-.stNumberInput:nth-of-type(1), .stSelectbox:nth-of-type(1) {{ animation-delay: 0.08s; }}
-.stNumberInput:nth-of-type(2), .stSelectbox:nth-of-type(2) {{ animation-delay: 0.09s; }}
-.stNumberInput:nth-of-type(3), .stSelectbox:nth-of-type(3) {{ animation-delay: 0.1s; }}
-.stNumberInput:nth-of-type(4), .stSelectbox:nth-of-type(4) {{ animation-delay: 0.11s; }}
-.stNumberInput:nth-of-type(5), .stSelectbox:nth-of-type(5) {{ animation-delay: 0.12s; }}
-.stNumberInput:nth-of-type(6), .stSelectbox:nth-of-type(6) {{ animation-delay: 0.13s; }}
-
-/* Sidebar Animation - SIMPLIFIED */
-section[data-testid="stSidebar"] {{
-    animation: fadeIn 0.3s ease-out;
-}}
+/* Sidebar - NO animation */
+section[data-testid="stSidebar"] {
+    /* No animation */
+}
 
 /* Ensure sidebar is visible on desktop */
 @media only screen and (min-width: 769px) {{
@@ -1136,7 +1151,10 @@ if "model" not in st.session_state:
     st.session_state.history      = []
     st.session_state.loaded       = False
 
-# Optimized loading - use cached functions (load data first, CSS later)
+# Inject optimized CSS early (but after critical inline CSS)
+inject_css(dark=st.session_state.dark_mode)
+
+# Optimized loading - use cached functions
 if "loaded" not in st.session_state or not st.session_state.loaded:
     # Auto-load model on startup (cached)
     if st.session_state.model is None:
@@ -1171,7 +1189,7 @@ else:
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-#  HERO BANNER (Render FIRST for fast LCP)
+#  HERO BANNER
 # ══════════════════════════════════════════════════════════════════════════════
 df = st.session_state.df
 n_records = len(df) if df is not None else 2393
@@ -1190,9 +1208,6 @@ st.markdown(f"""
   </div>
 </div>
 """, unsafe_allow_html=True)
-
-# NOW inject full CSS after hero is rendered (deferred for better LCP)
-inject_css(dark=st.session_state.dark_mode)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
