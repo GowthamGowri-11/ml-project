@@ -115,6 +115,9 @@ html, body, .stApp {{
 }}
 
 #MainMenu, footer, header {{ visibility: hidden; }}
+footer {{ display: none !important; }}
+footer::after {{ display: none !important; }}
+.viewerBadge_container__1QSob {{ display: none !important; }}
 .block-container {{ 
     padding-top: 2rem !important; 
     padding-bottom: 3rem !important;
@@ -206,9 +209,22 @@ html, body, .stApp {{
 section[data-testid="stSidebar"] {{
     background: {SIDEBAR} !important;
     border-right: 1px solid {SIDEBAR_BORDER} !important;
-    display: block !important;
-    visibility: visible !important;
 }}
+
+/* Sidebar Toggle Enhancement */
+[data-testid="stSidebarCollapseButton"] {{
+    background: rgba(139,92,246,0.1) !important;
+    border: 1px solid rgba(139,92,246,0.2) !important;
+    border-radius: 8px !important;
+    padding: 0.2rem !important;
+    transition: all 0.3s !important;
+}}
+
+[data-testid="stSidebarCollapseButton"]:hover {{
+    background: rgba(139,92,246,0.2) !important;
+    border-color: rgba(139,92,246,0.4) !important;
+}}
+
 .sidebar-logo {{ text-align: center; padding: 1rem 0 0.5rem; font-size: 2.4rem; line-height: 1; }}
 .sidebar-title {{ text-align: center; font-size: 1rem; font-weight: 700; color: {TXT}; margin-bottom: 0.2rem; }}
 .sidebar-sub {{ text-align: center; font-size: 0.72rem; color: {MUT}; margin-bottom: 1rem; }}
@@ -738,28 +754,28 @@ section[data-testid="stSidebar"] {{
 /* Mobile Phones (Portrait) - 320px to 480px */
 @media only screen and (max-width: 480px) {{
     .block-container {{
-        padding-left: 1rem !important;
-        padding-right: 1rem !important;
+        padding-left: 0.8rem !important;
+        padding-right: 0.8rem !important;
         padding-top: 1rem !important;
     }}
     
     .hero {{
-        padding: 1.2rem 1.4rem !important;
+        padding: 1rem 1.2rem !important;
         border-radius: 12px !important;
     }}
     
     .hero-title {{
-        font-size: 1.6rem !important;
+        font-size: 1.4rem !important;
         line-height: 1.2 !important;
     }}
     
     .hero-sub {{
-        font-size: 0.85rem !important;
+        font-size: 0.8rem !important;
     }}
     
     .hero-stats {{
         flex-direction: column !important;
-        gap: 0.8rem !important;
+        gap: 0.6rem !important;
     }}
     
     .hero-stat {{
@@ -768,47 +784,49 @@ section[data-testid="stSidebar"] {{
     }}
     
     .kpi-wrap {{
-        grid-template-columns: repeat(2, 1fr) !important;
+        grid-template-columns: 1fr !important;
         gap: 0.8rem !important;
     }}
     
     .kpi {{
-        padding: 0.8rem 1rem !important;
+        padding: 0.8rem !important;
     }}
     
     .kpi-val {{
-        font-size: 1.4rem !important;
-    }}
-    
-    .kpi-lbl {{
-        font-size: 0.65rem !important;
+        font-size: 1.3rem !important;
     }}
     
     .pred-card {{
-        padding: 1.4rem 1.2rem !important;
+        padding: 1.2rem 1rem !important;
     }}
     
     .pred-gpa {{
-        font-size: 3rem !important;
+        font-size: 2.5rem !important;
     }}
     
-    /* Stack columns on mobile */
-    .stColumn {{
+    /* FORCE COLUMN STACKING ON MOBILE */
+    [data-testid="stHorizontalBlock"] {{
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+        display: flex !important;
+    }}
+    
+    [data-testid="column"] {{
         width: 100% !important;
         min-width: 100% !important;
+        flex: 1 1 auto !important;
     }}
+
     
-    /* Hide sidebar by default on mobile only (under 480px) */
-    section[data-testid="stSidebar"] {{
-        display: none !important;
-    }}
-    
-    section[data-testid="stSidebar"][aria-expanded="true"] {{
+    /* Fix table overflow */
+    table {{
         display: block !important;
-        width: 80% !important;
-        z-index: 999999 !important;
+        overflow-x: auto !important;
+        white-space: nowrap !important;
     }}
 }}
+
+
 
 /* Mobile Phones (Landscape) & Small Tablets - 481px to 768px */
 @media only screen and (min-width: 481px) and (max-width: 768px) {{
@@ -817,25 +835,23 @@ section[data-testid="stSidebar"] {{
         padding-right: 1.5rem !important;
     }}
     
+    /* Column Stacking for Tablets */
+    [data-testid="stHorizontalBlock"] {{
+        flex-direction: column !important;
+        gap: 1.5rem !important;
+    }}
+    
+    [data-testid="column"] {{
+        width: 100% !important;
+        min-width: 100% !important;
+    }}
+
     .hero {{
         padding: 1.6rem 1.8rem !important;
     }}
     
     .hero-title {{
         font-size: 2rem !important;
-    }}
-    
-    .hero-sub {{
-        font-size: 0.95rem !important;
-    }}
-    
-    .hero-stats {{
-        flex-wrap: wrap !important;
-        gap: 1rem !important;
-    }}
-    
-    .hero-stat {{
-        flex: 1 1 45% !important;
     }}
     
     .kpi-wrap {{
@@ -845,12 +861,8 @@ section[data-testid="stSidebar"] {{
     .pred-gpa {{
         font-size: 3.5rem !important;
     }}
-    
-    /* Sidebar narrower on tablets */
-    section[data-testid="stSidebar"] {{
-        width: 250px !important;
-    }}
 }}
+
 
 /* Tablets (Portrait) - 769px to 1024px */
 @media only screen and (min-width: 769px) and (max-width: 1024px) {{
@@ -1063,8 +1075,8 @@ def prog_bar(label, val_str, pct):
     </div>"""
 
 # ─── Session state ─────────────────────────────────────────────────────────────
-if "dark_mode" not in st.session_state:
-    st.session_state.dark_mode = True
+# Force light mode as default
+st.session_state.dark_mode = False
 
 if "model" not in st.session_state:
     st.session_state.model        = None
@@ -1111,79 +1123,8 @@ else:
 # ══════════════════════════════════════════════════════════════════════════════
 #  SIDEBAR
 # ══════════════════════════════════════════════════════════════════════════════
-with st.sidebar:
-    st.markdown('<div class="sidebar-logo">🎓</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-title">Student Performance</div>', unsafe_allow_html=True)
-    st.markdown('<div class="sidebar-sub">AI Prediction Dashboard</div>', unsafe_allow_html=True)
+    pass
 
-    # ── Dark / Light toggle ──
-    col_tog1, col_tog2 = st.columns([1, 2])
-    with col_tog1:
-        st.markdown('<div style="padding-top:6px;font-size:1.2rem;">' +
-            ('🌙' if st.session_state.dark_mode else '☀️') + '</div>', unsafe_allow_html=True)
-    with col_tog2:
-        toggled = st.toggle(
-            "Dark Mode" if st.session_state.dark_mode else "Light Mode",
-            value=st.session_state.dark_mode,
-            key="theme_toggle"
-        )
-    if toggled != st.session_state.dark_mode:
-        st.session_state.dark_mode = toggled
-        st.rerun()
-
-    st.markdown("---")
-
-    # Model status
-    if st.session_state.model:
-        st.markdown('<div class="status-pill status-on"><div class="dot dot-on"></div>Model Ready</div>', unsafe_allow_html=True)
-        meta = st.session_state.metadata
-        if meta:
-            best = meta.get("best_model","-")
-            r2   = meta.get("metrics",{}).get(best,{}).get("r2_score","-")
-            st.markdown(f'<div style="font-size:0.75rem;color:#64748b;padding:0 4px;">🏆 {best} &nbsp;|&nbsp; R² {r2}</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="status-pill status-off"><div class="dot dot-off"></div>No Model Loaded</div>', unsafe_allow_html=True)
-
-    st.markdown("---")
-    st.markdown("**📂 Dataset**")
-    if st.session_state.df is not None:
-        df = st.session_state.df
-        current_count = len(df)
-        
-        # Check if data manager is available
-        if data_manager:
-            try:
-                stats = data_manager.get_dataset_stats()
-                last_updated = stats.get("last_updated", "Unknown")
-                st.markdown(f'<div style="font-size:0.8rem;color:#64748b;">✅ {current_count:,} records loaded</div>', unsafe_allow_html=True)
-                st.markdown(f'<div style="font-size:0.7rem;color:#94a3b8;">📅 Updated: {last_updated}</div>', unsafe_allow_html=True)
-                
-                # Show if dataset is growing
-                if 'initial_count' not in st.session_state:
-                    st.session_state.initial_count = current_count
-                
-                growth = current_count - st.session_state.initial_count
-                if growth > 0:
-                    st.markdown(f'<div style="font-size:0.75rem;color:#4ade80;">📈 +{growth} new records this session</div>', unsafe_allow_html=True)
-            except:
-                st.markdown(f'<div style="font-size:0.8rem;color:#64748b;">✅ {current_count:,} records loaded</div>', unsafe_allow_html=True)
-        else:
-            st.markdown(f'<div style="font-size:0.8rem;color:#64748b;">✅ {current_count:,} records loaded</div>', unsafe_allow_html=True)
-    else:
-        uploaded = st.file_uploader("Upload CSV", type=["csv"])
-        if uploaded:
-            st.session_state.df = pd.read_csv(uploaded)
-            st.success(f"Loaded {len(st.session_state.df):,} records")
-
-    st.markdown("---")
-    st.markdown("**⚡ Quick Facts**")
-    st.markdown("""
-<div style="font-size:0.78rem; color:#64748b; line-height:1.9;">
-🔢 &nbsp;3 ML Models compared<br>
-🧬 &nbsp;12 input features<br>
-📈 &nbsp;Predicts GPA (0-10)<br>
-🎯 &nbsp;95.32% R² accuracy
-</div>""", unsafe_allow_html=True)
 
     st.markdown("---")
     st.markdown('<div style="text-align:center;font-size:0.7rem;color:#1e293b;">Built with Streamlit · Scikit-learn</div>', unsafe_allow_html=True)
@@ -1563,7 +1504,7 @@ with tab1:
             st.markdown("<br>", unsafe_allow_html=True)
             col_reset1, col_reset2, col_reset3 = st.columns([1, 2, 1])
             with col_reset2:
-                if st.button("🔄 Make Another Prediction", use_container_width=True, type="secondary"):
+                if st.button("🔄 Make Another Prediction", use_container_width=True, type="primary"):
                     # Clear the prediction results by rerunning
                     st.rerun()
 
@@ -1781,11 +1722,11 @@ with tab3:
         st.markdown('<div class="sec-head">🏆 Best Model Performance</div>', unsafe_allow_html=True)
         bm = metrics.get(best, {})
         st.markdown(f"""
-        <div class="kpi-wrap kpi3">
-            <div class="kpi"><div class="kpi-icon">📐</div><div class="kpi-val">{bm.get('r2_score','-')}</div><div class="kpi-lbl">R² Score</div></div>
-            <div class="kpi"><div class="kpi-icon">📉</div><div class="kpi-val">{bm.get('mae','-')}</div><div class="kpi-lbl">MAE</div></div>
-            <div class="kpi"><div class="kpi-icon">📏</div><div class="kpi-val">{bm.get('rmse','-')}</div><div class="kpi-lbl">RMSE</div></div>
-        </div>""", unsafe_allow_html=True)
+<div class="kpi-wrap kpi3">
+<div class="kpi"><div class="kpi-icon">📐</div><div class="kpi-val">{bm.get('r2_score','-')}</div><div class="kpi-lbl">R² Score</div></div>
+<div class="kpi"><div class="kpi-icon">📉</div><div class="kpi-val">{bm.get('mae','-')}</div><div class="kpi-lbl">MAE</div></div>
+<div class="kpi"><div class="kpi-icon">📏</div><div class="kpi-val">{bm.get('rmse','-')}</div><div class="kpi-lbl">RMSE</div></div>
+</div>""", unsafe_allow_html=True)
 
         st.markdown(f'<div style="text-align:center;margin:-0.5rem 0 1.2rem;font-size:0.85rem;color:#64748b;">🏅 Best model: <strong style="color:#a78bfa">{best}</strong></div>', unsafe_allow_html=True)
 
@@ -1801,16 +1742,16 @@ with tab3:
             r2_color = "#10b981" if r2_score >= 0.95 else "#3b82f6" if r2_score >= 0.90 else "#f59e0b" if r2_score >= 0.80 else "#f97316"
             
             st.markdown(f"""
-            <div style="padding:1.2rem;background:rgba(124,58,237,0.05);border-radius:12px;border:2px solid {r2_color};">
-                <div style="text-align:center;margin-bottom:0.8rem;">
-                    <div style="font-size:2.5rem;font-weight:700;color:{r2_color};">{r2_pct:.1f}%</div>
-                    <div style="font-size:0.9rem;color:#94a3b8;margin-top:0.2rem;">Model Accuracy</div>
-                </div>
-                <div style="padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;text-align:center;">
-                    <div style="font-size:0.85rem;color:#e2e8f0;font-weight:600;">{r2_rating} Performance</div>
-                    <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">R² Score: {r2_score:.4f}</div>
-                </div>
-            </div>""", unsafe_allow_html=True)
+<div style="padding:1.2rem;background:rgba(124,58,237,0.05);border-radius:12px;border:2px solid {r2_color};">
+<div style="text-align:center;margin-bottom:0.8rem;">
+<div style="font-size:2.5rem;font-weight:700;color:{r2_color};">{r2_pct:.1f}%</div>
+<div style="font-size:0.9rem;color:#94a3b8;margin-top:0.2rem;">Model Accuracy</div>
+</div>
+<div style="padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;text-align:center;">
+<div style="font-size:0.85rem;color:#e2e8f0;font-weight:600;">{r2_rating} Performance</div>
+<div style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">R² Score: {r2_score:.4f}</div>
+</div>
+</div>""", unsafe_allow_html=True)
         
         with insight_col2:
             mae = bm.get('mae', 0)
@@ -1818,16 +1759,16 @@ with tab3:
             mae_color = "#10b981" if mae <= 0.15 else "#3b82f6" if mae <= 0.20 else "#f59e0b" if mae <= 0.30 else "#f97316"
             
             st.markdown(f"""
-            <div style="padding:1.2rem;background:rgba(124,58,237,0.05);border-radius:12px;border:2px solid {mae_color};">
-                <div style="text-align:center;margin-bottom:0.8rem;">
-                    <div style="font-size:2.5rem;font-weight:700;color:{mae_color};">{mae:.4f}</div>
-                    <div style="font-size:0.9rem;color:#94a3b8;margin-top:0.2rem;">Mean Absolute Error</div>
-                </div>
-                <div style="padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;text-align:center;">
-                    <div style="font-size:0.85rem;color:#e2e8f0;font-weight:600;">{mae_rating} Precision</div>
-                    <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">Avg Error: ±{mae*2.5:.2f} GPA points</div>
-                </div>
-            </div>""", unsafe_allow_html=True)
+<div style="padding:1.2rem;background:rgba(124,58,237,0.05);border-radius:12px;border:2px solid {mae_color};">
+<div style="text-align:center;margin-bottom:0.8rem;">
+<div style="font-size:2.5rem;font-weight:700;color:{mae_color};">{mae:.4f}</div>
+<div style="font-size:0.9rem;color:#94a3b8;margin-top:0.2rem;">Mean Absolute Error</div>
+</div>
+<div style="padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;text-align:center;">
+<div style="font-size:0.85rem;color:#e2e8f0;font-weight:600;">{mae_rating} Precision</div>
+<div style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">Avg Error: ±{mae*2.5:.2f} GPA points</div>
+</div>
+</div>""", unsafe_allow_html=True)
         
         with insight_col3:
             rmse = bm.get('rmse', 0)
@@ -1835,16 +1776,16 @@ with tab3:
             rmse_color = "#10b981" if rmse <= 0.18 else "#3b82f6" if rmse <= 0.25 else "#f59e0b" if rmse <= 0.35 else "#f97316"
             
             st.markdown(f"""
-            <div style="padding:1.2rem;background:rgba(124,58,237,0.05);border-radius:12px;border:2px solid {rmse_color};">
-                <div style="text-align:center;margin-bottom:0.8rem;">
-                    <div style="font-size:2.5rem;font-weight:700;color:{rmse_color};">{rmse:.4f}</div>
-                    <div style="font-size:0.9rem;color:#94a3b8;margin-top:0.2rem;">Root Mean Squared Error</div>
-                </div>
-                <div style="padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;text-align:center;">
-                    <div style="font-size:0.85rem;color:#e2e8f0;font-weight:600;">{rmse_rating} Consistency</div>
-                    <div style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">Std Error: ±{rmse*2.5:.2f} GPA points</div>
-                </div>
-            </div>""", unsafe_allow_html=True)
+<div style="padding:1.2rem;background:rgba(124,58,237,0.05);border-radius:12px;border:2px solid {rmse_color};">
+<div style="text-align:center;margin-bottom:0.8rem;">
+<div style="font-size:2.5rem;font-weight:700;color:{rmse_color};">{rmse:.4f}</div>
+<div style="font-size:0.9rem;color:#94a3b8;margin-top:0.2rem;">Root Mean Squared Error</div>
+</div>
+<div style="padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;text-align:center;">
+<div style="font-size:0.85rem;color:#e2e8f0;font-weight:600;">{rmse_rating} Consistency</div>
+<div style="font-size:0.75rem;color:#94a3b8;margin-top:0.2rem;">Std Error: ±{rmse*2.5:.2f} GPA points</div>
+</div>
+</div>""", unsafe_allow_html=True)
 
         # Model Comparison Summary
         st.markdown('<div class="sec-head">🔬 All Models Comparison</div>', unsafe_allow_html=True)
@@ -1859,29 +1800,29 @@ with tab3:
             bg_color = "rgba(124,58,237,0.1)" if is_best else "rgba(124,58,237,0.03)"
             
             st.markdown(f"""
-            <div style="padding:1rem;margin:0.8rem 0;background:{bg_color};border-radius:10px;border:2px solid {border_color};">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
-                    <div>
-                        <span style="font-size:1.1rem;font-weight:700;color:#e2e8f0;">{'🏆 ' if is_best else ''}{model_name}</span>
-                        {f'<span style="margin-left:0.5rem;padding:0.2rem 0.6rem;background:#7c3aed;color:#fff;border-radius:12px;font-size:0.75rem;font-weight:600;">BEST MODEL</span>' if is_best else ''}
-                    </div>
-                    <div style="font-size:1.2rem;font-weight:700;color:#a78bfa;">{m['r2_score']*100:.2f}%</div>
-                </div>
-                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;">
-                    <div style="text-align:center;padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;">
-                        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.2rem;">R² Score</div>
-                        <div style="font-size:1rem;font-weight:600;color:#e2e8f0;">{m['r2_score']:.4f}</div>
-                    </div>
-                    <div style="text-align:center;padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;">
-                        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.2rem;">MAE</div>
-                        <div style="font-size:1rem;font-weight:600;color:#e2e8f0;">{m['mae']:.4f}</div>
-                    </div>
-                    <div style="text-align:center;padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;">
-                        <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.2rem;">RMSE</div>
-                        <div style="font-size:1rem;font-weight:600;color:#e2e8f0;">{m['rmse']:.4f}</div>
-                    </div>
-                </div>
-            </div>""", unsafe_allow_html=True)
+<div style="padding:1rem;margin:0.8rem 0;background:{bg_color};border-radius:10px;border:2px solid {border_color};">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem;">
+<div>
+<span style="font-size:1.1rem;font-weight:700;color:#e2e8f0;">{'🏆 ' if is_best else ''}{model_name}</span>
+{f'<span style="margin-left:0.5rem;padding:0.2rem 0.6rem;background:#7c3aed;color:#fff;border-radius:12px;font-size:0.75rem;font-weight:600;">BEST MODEL</span>' if is_best else ''}
+</div>
+<div style="font-size:1.2rem;font-weight:700;color:#a78bfa;">{m['r2_score']*100:.2f}%</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;">
+<div style="text-align:center;padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;">
+<div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.2rem;">R² Score</div>
+<div style="font-size:1rem;font-weight:600;color:#e2e8f0;">{m['r2_score']:.4f}</div>
+</div>
+<div style="text-align:center;padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;">
+<div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.2rem;">MAE</div>
+<div style="font-size:1rem;font-weight:600;color:#e2e8f0;">{m['mae']:.4f}</div>
+</div>
+<div style="text-align:center;padding:0.6rem;background:rgba(0,0,0,0.2);border-radius:6px;">
+<div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.2rem;">RMSE</div>
+<div style="font-size:1rem;font-weight:600;color:#e2e8f0;">{m['rmse']:.4f}</div>
+</div>
+</div>
+</div>""", unsafe_allow_html=True)
 
         # Gauge for best model
         st.markdown('<div class="sec-head">🎯 Accuracy Gauge</div>', unsafe_allow_html=True)
@@ -1890,7 +1831,7 @@ with tab3:
             mode="gauge+number+delta",
             value=r2_pct,
             delta={"reference": 90, "suffix":"%"},
-            number={"suffix":"%", "font":{"size":42,"color":"#a78bfa","family":"Inter"}},
+            number={"suffix":"%", "font":{"size":38,"color":"#a78bfa","family":"Inter"}},
             gauge={
                 "axis":{"range":[0,100], "tickfont":{"color":"#64748b"}, "tickcolor":"#334155"},
                 "bar":{"color":"#7c3aed", "thickness":0.25},
@@ -1903,10 +1844,16 @@ with tab3:
                 ],
                 "threshold":{"line":{"color":"#4ade80","width":3},"value":90},
             },
-            title={"text": f"<b>{best}</b> - Model Accuracy", "font":{"color":"#e2e8f0" if st.session_state.dark_mode else "#1e293b","size":14}},
+            title={"text": f"<b>{best}</b> - Model Accuracy", "font":{"color":"#e2e8f0" if st.session_state.dark_mode else "#1e293b","size":13}},
         ))
-        fig_gauge.update_layout(**plotly_theme(st.session_state.dark_mode), height=320, showlegend=False)
+        fig_gauge.update_layout(
+            **plotly_theme(st.session_state.dark_mode), 
+            height=280, 
+            margin=dict(l=40, r=40, t=80, b=20),
+            showlegend=False
+        )
         st.plotly_chart(fig_gauge, use_container_width=True, config={'displayModeBar': False})
+
 
         # Metrics Explanation
         st.markdown('<div class="sec-head">📚 Understanding the Metrics</div>', unsafe_allow_html=True)
@@ -2001,16 +1948,7 @@ Three regression models compete; the best one (by R² score) is saved and used f
 </div>
 </div>""", unsafe_allow_html=True)
 
-        st.markdown("""
-<div class="g-card">
-<h4 style="color:#a78bfa;margin-top:0">🎯 Why Linear Regression?</h4>
-<p style="color:#94a3b8;font-size:0.88rem;line-height:1.7;">
-Our system uses Linear Regression as the primary model because it delivers:<br><br>
-<strong style="color:#10b981;">95.32% Accuracy</strong> - Highest among all tested models<br>
-<strong style="color:#3b82f6;">Fast Performance</strong> - Real-time predictions<br>
-<strong style="color:#a78bfa;">Low Resources</strong> - Efficient and scalable
-</p>
-</div>""", unsafe_allow_html=True)
+
 
     # Model Performance Comparison
     st.markdown('<div class="sec-head">🎮 Model Performance Overview</div>', unsafe_allow_html=True)
@@ -2023,39 +1961,8 @@ Our system uses Linear Regression as the primary model because it delivers:<br><
     </div>""", unsafe_allow_html=True)
     
     # Only show Linear Regression
-    st.markdown("""
-    <div style="padding:1.5rem;background:rgba(16,185,129,0.1);border-radius:12px;border:2px solid #10b981;text-align:center;max-width:600px;margin:0 auto;">
-        <div style="font-size:2rem;margin-bottom:0.5rem;">📐</div>
-        <h3 style="color:#10b981;margin:0 0 0.8rem 0;">Linear Regression Model</h3>
-        <div style="font-size:3rem;font-weight:700;color:#10b981;margin:0.5rem 0;">95.32%</div>
-        <div style="font-size:1rem;color:#94a3b8;margin-bottom:1.5rem;">Prediction Accuracy</div>
-        
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1.5rem;">
-            <div style="padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;">
-                <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.3rem;">R² Score</div>
-                <div style="font-size:1.3rem;font-weight:600;color:#e2e8f0;">0.9532</div>
-            </div>
-            <div style="padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;">
-                <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.3rem;">MAE</div>
-                <div style="font-size:1.3rem;font-weight:600;color:#e2e8f0;">0.1553</div>
-            </div>
-            <div style="padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;">
-                <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.3rem;">RMSE</div>
-                <div style="font-size:1.3rem;font-weight:600;color:#e2e8f0;">0.1966</div>
-            </div>
-        </div>
-        
-        <div style="text-align:left;padding:1rem;background:rgba(0,0,0,0.2);border-radius:8px;">
-            <h4 style="color:#10b981;margin:0 0 0.8rem 0;font-size:1rem;">✨ Key Strengths</h4>
-            <div style="font-size:0.9rem;color:#94a3b8;line-height:2;">
-                ✅ Highest accuracy among all tested models<br>
-                ✅ Fast training and real-time predictions<br>
-                ✅ Low computational resource requirements<br>
-                ✅ Excellent for educational performance data<br>
-                ✅ Reliable and consistent results
-            </div>
-        </div>
-    </div>""", unsafe_allow_html=True)
+    pass
+
     
     # Interactive Feature Importance Simulator
     st.markdown('<div class="sec-head">🎯 Feature Impact Simulator</div>', unsafe_allow_html=True)
